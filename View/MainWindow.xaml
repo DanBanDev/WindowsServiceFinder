@@ -1,0 +1,185 @@
+﻿<Window x:Class="Service_Finder.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Service_Finder.View"
+        xmlns:localVM="clr-namespace:Service_Finder.ViewModel"
+        xmlns:vc="clr-namespace:Service_Finder.ValueConverters"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        WindowState="Maximized" Loaded="Window_Loaded">
+
+    <Window.DataContext>
+        <localVM:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <vc:ComboBoxToByteConverter x:Key="Combo2Byte"/>
+    </Window.Resources>
+
+    <Grid Background="#FF2F2F2F">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <ProgressBar Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,86" Grid.ColumnSpan="2" Height="9"  Value="{Binding ProgressValue}" Background="#FF2F2F2F" BorderThickness="0,0,0,0"/>
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Background="#FF2F2F2F" VerticalAlignment="Center">
+            <Label FontWeight="Bold" Margin="15,15,15,2" FontSize="18" HorizontalAlignment="Center" Content="Number Services:" Background="{x:Null}" Foreground="#FFBDC715"/>
+            <Label Content="{Binding FilteredList.Count}" HorizontalAlignment="Center" Margin="0,0,0,5" Foreground="#FFBDC715" FontWeight="Bold" FontSize="24"/>
+        </StackPanel>
+
+
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2" Height="30">
+            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                <Label Content="Search:" Foreground="#FFBDC715" FontSize="14" FontWeight="Bold"/>
+                <TextBox  HorizontalAlignment="Left" Margin="20,0,0,0" TextWrapping="Wrap" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Width="301" Height="30" RenderTransformOrigin="0.493,0.52" />
+            </StackPanel>
+
+           <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                <Label Content="Search inside:" Foreground="#FFBDC715" FontSize="14" FontWeight="Bold"/>
+                <ComboBox SelectedItem="{Binding Option1_SearchInColumn, Converter={StaticResource Combo2Byte}}" Foreground="#FF020202" Background="Black" FontFamily="Segoe UI Black" BorderBrush="#FF121111">
+                    <ComboBoxItem Tag="1" IsSelected="True">Display- und Servicename</ComboBoxItem>
+                    <ComboBoxItem Tag="2">Description</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                <Label Foreground="#FFBDC715" FontSize="14" FontWeight="Bold">Status:</Label>
+                <ComboBox SelectedItem="{Binding Option2_Status, Converter={StaticResource Combo2Byte}}" Width="78" Foreground="Black" FontFamily="Segoe UI Black" HorizontalContentAlignment="Center" HorizontalAlignment="Left">
+                    <ComboBox.Background>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Color="#FFF0F0F0"/>
+                            <GradientStop Color="#FF5A5A5A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ComboBox.Background>
+                    <ComboBoxItem Tag="1" IsSelected="True">All</ComboBoxItem>
+                    <ComboBoxItem Tag="2">Running</ComboBoxItem>
+                    <ComboBoxItem Tag="3">Stopped</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0,35,0,0">
+            <Button  Content="Start" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="start" FontWeight="Bold" FontSize="16" FontFamily="Arial Black" Background="#FF7F7878">
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+            </Button>
+            <Button Content="Stop" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0"  Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="stop" FontFamily="Arial Black" FontSize="16"  Background="#FF3C3C3C" >
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+            </Button>
+            <Button Content="Pause" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="pause" FontFamily="Arial Black" FontSize="16"  Background="#FF3C3C3C" >
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+            </Button>
+            <Button Content="Continue" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="continue" FontFamily="Arial Black" FontSize="14"  Background="#FF3C3C3C">
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+            </Button>
+            <Button Content="New Start" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="newStart" FontFamily="Arial" FontSize="14" FontWeight="Bold"  Background="#FF3C3C3C" >
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2">
+            <Label x:Name="Description_Label" Content="Description:" HorizontalContentAlignment="Right" FontWeight="Bold" Margin="0,15,0,8" Foreground="#FFBDC715" FontSize="14"/>
+            <Label x:Name="ServicePath_Label" Content="Path:" HorizontalContentAlignment="Right" FontWeight="Bold" Margin="0,7,0,8" Foreground="#FFBDC715" FontSize="14"/>
+        </StackPanel>
+
+
+        <TabControl Grid.Column="1" Grid.Row="1" Name="tabControlFenster" Margin="0,0,10,0">
+            <TabItem Header="All Services">
+                <ListView x:Name="MainListView" SelectionMode="Single" ItemsSource="{Binding FilteredList, Mode=TwoWay}" SelectedItem="{Binding SelectedItemMainListView, Mode=TwoWay}" Background="#FF1D1D1D" Foreground="White" FontWeight="Bold">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ServiceName" Width="120" DisplayMemberBinding="{Binding Service.ServiceName}" />
+                            <GridViewColumn Header="DisplayName" Width="200" DisplayMemberBinding="{Binding Service.DisplayName}" />
+                            <GridViewColumn Header="Description" Width="900" DisplayMemberBinding="{Binding Description}" />
+                            <GridViewColumn Header="Status" Width="80" DisplayMemberBinding="{Binding Service.Status}" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu StaysOpen="true">
+                            <MenuItem Header="Add to Watchlist" Command="{Binding AddToWatchlistActionCommand, Mode=OneWay, ValidatesOnNotifyDataErrors=True}"/>
+                            <!--<MenuItem Header="Save"/>
+                            <MenuItem Header="SaveAs"/>-->
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="#141f1f" />
+                            <Setter Property="Foreground" Value="#f2f2f2" />
+
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#639c9c" />
+                                    <Setter Property="Foreground" Value="#e6e600" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="false">
+                                    <Setter Property="Background" Value="#507c7c" />
+                                    <Setter Property="Foreground" Value="#f2f2f2" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                </ListView>
+            </TabItem>
+            <TabItem Header="Watchlist">
+                <ListView x:Name="WatchListView" ItemsSource="{Binding ServiceDataObject.WatchListServiceCollection}" SelectedItem="{Binding SelectedItemMainListView, Mode=TwoWay}" Background="#FF1D1D1D">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ServiceName" Width="120" DisplayMemberBinding="{Binding Service.ServiceName}" />
+                            <GridViewColumn Header="DisplayName" Width="200" DisplayMemberBinding="{Binding Service.DisplayName}" />
+                            <GridViewColumn Header="Description" Width="900"  DisplayMemberBinding="{Binding Description}" />
+                            <GridViewColumn Header="Status" Width="80" DisplayMemberBinding="{Binding Service.Status}" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu StaysOpen="true">
+                            <MenuItem Header="Remove from Watchlist" Command="{Binding RemoveFromWatchlistActionCommand, Mode=OneWay}"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="#141f1f" />
+                            <Setter Property="Foreground" Value="#f2f2f2" />
+
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#639c9c" />
+                                    <Setter Property="Foreground" Value="#e6e600" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="false">
+                                    <Setter Property="Background" Value="#507c7c" />
+                                    <Setter Property="Foreground" Value="#f2f2f2" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </TabItem>
+        </TabControl>
+
+        <TextBox x:Name="DescriptionText_TextBox" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="{Binding SelectedItemMainListView.Description}" VerticalAlignment="Top" Height="41" BorderThickness="0,0,0,0" FontWeight="Bold" FontSize="14" Foreground="Black" Background="White" Width="1257"/>
+        <TextBox x:Name="ServicePathText_Label" Grid.Column="1" Text="{Binding SelectedItemMainListView.ServicePath}" HorizontalAlignment="Left" Margin="10,56,0,0" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="0.498,0.54" Width="1257" Height="34" FontWeight="Bold" FontSize="14" Foreground="Black" Background="White"/>
+
+
+    </Grid>
+</Window>
