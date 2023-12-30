@@ -7,7 +7,7 @@
         xmlns:localVM="clr-namespace:Service_Finder.ViewModel"
         xmlns:vc="clr-namespace:Service_Finder.ValueConverters"
         mc:Ignorable="d"
-        Title="MainWindow" 
+        Title="Windows Service Finder" 
         WindowState="Maximized" Loaded="Window_Loaded">
 
     <Window.DataContext>
@@ -20,9 +20,9 @@
 
     <Grid Background="#FF2F2F2F">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" MaxHeight="120"/>
+            <RowDefinition Height="3*" MaxHeight="Infinity"/>
+            <RowDefinition Height="*" MaxHeight="100"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -34,26 +34,26 @@
         <ProgressBar Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,86" Grid.ColumnSpan="2" Height="9"  Value="{Binding ProgressValue}" Background="#FF2F2F2F" BorderThickness="0,0,0,0"/>
 
         <StackPanel Grid.Column="0" Grid.Row="0" Background="#FF2F2F2F" VerticalAlignment="Center">
-            <Label FontWeight="Bold" Margin="15,15,15,2" FontSize="18" HorizontalAlignment="Center" Content="Number Services:" Background="{x:Null}" Foreground="#FFBDC715"/>
+            <Label FontWeight="Bold" Margin="15,15,15,2" FontSize="18" HorizontalAlignment="Center" Content="Number Services:" Background="{x:Null}" Foreground="#FFBDC715" FontFamily="Segoe UI Black"/>
             <Label Content="{Binding FilteredList.Count}" HorizontalAlignment="Center" Margin="0,0,0,5" Foreground="#FFBDC715" FontWeight="Bold" FontSize="24"/>
         </StackPanel>
 
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2" Height="30">
             <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                <Label Content="Search:" Foreground="#FFBDC715" FontSize="14" FontWeight="Bold"/>
-                <TextBox  HorizontalAlignment="Left" Margin="20,0,0,0" TextWrapping="Wrap" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Width="301" Height="30" RenderTransformOrigin="0.493,0.52" />
+                <Label Content="Search:" Foreground="#FFBDC715" FontSize="14" FontWeight="Bold" FontFamily="Segoe UI Black"/>
+                <TextBox  HorizontalAlignment="Left" Margin="20,0,0,0" TextWrapping="Wrap" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Width="301" Height="30" RenderTransformOrigin="0.493,0.52" FontFamily="Bahnschrift SemiCondensed" FontSize="16" FontWeight="Bold" />
             </StackPanel>
 
            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                <Label Content="Search inside:" Foreground="#FFBDC715" FontSize="14" FontWeight="Bold"/>
+                <Label Content="Search inside:" Foreground="#FFBDC715" FontSize="14" FontWeight="Bold" FontFamily="Segoe UI Black"/>
                 <ComboBox SelectedItem="{Binding Option1_SearchInColumn, Converter={StaticResource Combo2Byte}}" Foreground="#FF020202" Background="Black" FontFamily="Segoe UI Black" BorderBrush="#FF121111">
                     <ComboBoxItem Tag="1" IsSelected="True">Display- und Servicename</ComboBoxItem>
                     <ComboBoxItem Tag="2">Description</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                <Label Foreground="#FFBDC715" FontSize="14" FontWeight="Bold">Status:</Label>
+                <Label Foreground="#FFBDC715" FontSize="14" FontWeight="Bold" FontFamily="Segoe UI Black">Status:</Label>
                 <ComboBox SelectedItem="{Binding Option2_Status, Converter={StaticResource Combo2Byte}}" Width="78" Foreground="Black" FontFamily="Segoe UI Black" HorizontalContentAlignment="Center" HorizontalAlignment="Left">
                     <ComboBox.Background>
                         <LinearGradientBrush EndPoint="0,1">
@@ -70,48 +70,45 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Margin="0,35,0,0">
-            <Button  Content="Start" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="start" FontWeight="Bold" FontSize="16" FontFamily="Arial Black" Background="#FF7F7878">
+            <Button  Content="Start" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="start" FontSize="18" FontFamily="Segoe UI Black" Background="#FF7F7878" FontWeight="Bold">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
             </Button>
-            <Button Content="Stop" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0"  Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="stop" FontFamily="Arial Black" FontSize="16"  Background="#FF3C3C3C" >
+            <Button Content="Stop" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0"  Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="stop" FontFamily="Segoe UI Black" FontSize="16"  Background="#FF3C3C3C" >
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
             </Button>
-            <Button Content="Pause" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="pause" FontFamily="Arial Black" FontSize="16"  Background="#FF3C3C3C" >
+            <Button Content="Pause" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="pause" FontFamily="Segoe UI Black" FontSize="16"  Background="#FF3C3C3C" >
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
             </Button>
-            <Button Content="Continue" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="continue" FontFamily="Arial Black" FontSize="14"  Background="#FF3C3C3C">
+            <Button Content="Continue" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="continue" FontFamily="Segoe UI Black" FontSize="14"  Background="#FF3C3C3C">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
             </Button>
-            <Button Content="New Start" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="newStart" FontFamily="Arial" FontSize="14" FontWeight="Bold"  Background="#FF3C3C3C" >
+            <Button Content="New Start" HorizontalAlignment="Center" Margin="0,15,0,15" Width="80" Height="30" BorderThickness="0,0,0,0" Command="{Binding ServiceActionCommand, Mode=OneWay}" CommandParameter="newStart" FontFamily="Segoe UI Black" FontSize="14" FontWeight="Bold"  Background="#FF3C3C3C" >
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
             </Button>
         </StackPanel>
 
-        <StackPanel Grid.Row="2">
-            <Label x:Name="Description_Label" Content="Description:" HorizontalContentAlignment="Right" FontWeight="Bold" Margin="0,15,0,8" Foreground="#FFBDC715" FontSize="14"/>
-            <Label x:Name="ServicePath_Label" Content="Path:" HorizontalContentAlignment="Right" FontWeight="Bold" Margin="0,7,0,8" Foreground="#FFBDC715" FontSize="14"/>
-        </StackPanel>
 
 
-        <TabControl Grid.Column="1" Grid.Row="1" Name="tabControlFenster" Margin="0,0,10,0">
+
+        <TabControl Grid.Column="1" Grid.Row="1" Name="tabControlFenster" Margin="0,0,10,0" VerticalContentAlignment="Bottom" FontFamily="Impact" FontSize="16">
             <TabItem Header="All Services">
-                <ListView x:Name="MainListView" SelectionMode="Single" ItemsSource="{Binding FilteredList, Mode=TwoWay}" SelectedItem="{Binding SelectedItemMainListView, Mode=TwoWay}" Background="#FF1D1D1D" Foreground="White" FontWeight="Bold">
+                <ListView x:Name="MainListView" SelectionMode="Single" ItemsSource="{Binding FilteredList, Mode=TwoWay}" SelectedItem="{Binding SelectedItemMainListView, Mode=TwoWay}" Background="#FF1D1D1D" Foreground="White" VerticalContentAlignment="Bottom" UseLayoutRounding="False" FontFamily="Bahnschrift SemiCondensed" FontSize="16">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="ServiceName" Width="120" DisplayMemberBinding="{Binding Service.ServiceName}" />
                             <GridViewColumn Header="DisplayName" Width="200" DisplayMemberBinding="{Binding Service.DisplayName}" />
-                            <GridViewColumn Header="Description" Width="900" DisplayMemberBinding="{Binding Description}" />
-                            <GridViewColumn Header="Status" Width="80" DisplayMemberBinding="{Binding Service.Status}" />
+                            <GridViewColumn Header="Description" Width="1000" DisplayMemberBinding="{Binding Description}" />
+                            <GridViewColumn Header="Status" Width="70" DisplayMemberBinding="{Binding Service.Status}" />
                         </GridView>
                     </ListView.View>
                     <ListView.ContextMenu>
@@ -128,12 +125,12 @@
 
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#639c9c" />
+                                    <Setter Property="Background" Value="#1a1a1a" />
                                     <Setter Property="Foreground" Value="#e6e600" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="false">
-                                    <Setter Property="Background" Value="#507c7c" />
-                                    <Setter Property="Foreground" Value="#f2f2f2" />
+                                    <Setter Property="Background" Value="#2F2F2F" />
+                                    <Setter Property="Foreground" Value="#ffffff" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -142,7 +139,7 @@
                 </ListView>
             </TabItem>
             <TabItem Header="Watchlist">
-                <ListView x:Name="WatchListView" ItemsSource="{Binding ServiceDataObject.WatchListServiceCollection}" SelectedItem="{Binding SelectedItemMainListView, Mode=TwoWay}" Background="#FF1D1D1D">
+                <ListView x:Name="WatchListView" ItemsSource="{Binding ServiceDataObject.WatchListServiceCollection}" SelectedItem="{Binding SelectedItemMainListView, Mode=TwoWay}" Background="#FF1D1D1D" VerticalContentAlignment="Bottom" FontFamily="Bahnschrift SemiCondensed">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="ServiceName" Width="120" DisplayMemberBinding="{Binding Service.ServiceName}" />
@@ -163,12 +160,12 @@
 
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#639c9c" />
+                                    <Setter Property="Background" Value="#1a1a1a" />
                                     <Setter Property="Foreground" Value="#e6e600" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="false">
-                                    <Setter Property="Background" Value="#507c7c" />
-                                    <Setter Property="Foreground" Value="#f2f2f2" />
+                                    <Setter Property="Background" Value="#2F2F2F" />
+                                    <Setter Property="Foreground" Value="#ffffff" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -177,8 +174,21 @@
             </TabItem>
         </TabControl>
 
-        <TextBox x:Name="DescriptionText_TextBox" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="{Binding SelectedItemMainListView.Description}" VerticalAlignment="Top" Height="41" BorderThickness="0,0,0,0" FontWeight="Bold" FontSize="14" Foreground="Black" Background="White" Width="1257"/>
-        <TextBox x:Name="ServicePathText_Label" Grid.Column="1" Text="{Binding SelectedItemMainListView.ServicePath}" HorizontalAlignment="Left" Margin="10,56,0,0" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="0.498,0.54" Width="1257" Height="34" FontWeight="Bold" FontSize="14" Foreground="Black" Background="White"/>
+
+        <StackPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Label x:Name="Description_Label" Content="Description:" HorizontalContentAlignment="Right" FontWeight="Bold" Margin="0,15,0,8" Foreground="#FFBDC715" FontSize="14" FontFamily="Segoe UI Black"/>
+            <Label x:Name="ServicePath_Label" Content="Path:" HorizontalContentAlignment="Right" FontWeight="Bold" Margin="0,7,0,8" Foreground="#FFBDC715" FontSize="14" FontFamily="Segoe UI Black"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Left" Margin="0,0,0,5" VerticalAlignment="Bottom" MaxHeight="100">
+            <TextBox x:Name="DescriptionText_TextBox" HorizontalAlignment="Left" Margin="5,10,0,0"  TextWrapping="Wrap" Text="{Binding SelectedItemMainListView.Description}" VerticalAlignment="Top" Height="41" BorderThickness="0,0,0,0" FontWeight="Bold" FontSize="14" Foreground="Black" Background="White" Width="1257"/>
+            <TextBox x:Name="ServicePathText_Label"  Text="{Binding SelectedItemMainListView.ServicePath}" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.498,0.54" Width="1257" Height="34" FontWeight="Bold" FontSize="14" Foreground="Black" Background="White"/>
+        </StackPanel>
+
+ 
+
+
+
 
 
     </Grid>

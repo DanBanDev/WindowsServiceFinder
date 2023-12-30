@@ -2,14 +2,10 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using static Service_Finder.ViewModel.MainViewModel;
 using Service_Finder.Model;
 
 namespace Service_Finder.ViewModel
@@ -25,17 +21,20 @@ namespace Service_Finder.ViewModel
             ServiceDataObject = new ServiceData();
        
             filteredList = new ObservableCollection<ServiceData.FullServiceProperties>();
-            //WatchListServiceCollection = new ObservableCollection<FullServiceProperties>();
-            //fillCollection();
+
             filterOption1 = delegate (ServiceData.FullServiceProperties x, string y)
             {
                 return (x.Service.ServiceName.ToLower().Contains(y) || x.Service.DisplayName.ToLower().Contains(y)); 
             };
+
             filterOption2 = delegate (ServiceData.FullServiceProperties x)
             {
                 return true;
             };
-            //selectedItemMainListView = new();
+
+            haveAdminRights = IsCurrentProcessAdmin();
+            
+
         }
 
         public ServiceData ServiceDataObject { get; set; }
@@ -47,20 +46,12 @@ namespace Service_Finder.ViewModel
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ServiceActionCommand))]
         ServiceData.FullServiceProperties selectedItemMainListView;
-        //public FullServiceProperties SelectedItemMainListView
-        //{
-
-        //    get => selectedItemMainListView;
-        //    set
-        //    {
-        //        selectedItemMainListView = value;
-        //        ServiceActionCommand.NotifyCanExecuteChanged();
 
 
-        //    }
-        //}
         public delegate MessageBoxResult OpenMessageBoxHandler(string message);
         public OpenMessageBoxHandler OpenMessageBox { get; set; }
+
+        bool haveAdminRights { get; } = false;
 
         string filter = String.Empty;
         public string Filter
@@ -68,7 +59,6 @@ namespace Service_Finder.ViewModel
             get=> filter;
             set { 
                 filter = value; 
-                //SetProperty(ref filter, value);
                 DoFiltering();  
             }   
         }
@@ -152,49 +142,56 @@ namespace Service_Finder.ViewModel
         [RelayCommand(CanExecute = nameof(CanExecuteServiceAction))]
         public async void ServiceAction(object p)
         {
-            //TimeSpan timeout = TimeSpan.FromMilliseconds(8000);
+  
             try
-            { 
-            switch ((string)p) { 
-                case "start":
-                    SelectedItemMainListView.Service.Start();                    
-                    await Task.Run(() => ShowProgress(ServiceControllerStatus.Running));                    
+            {
+                if (haveAdminRights)
+                { 
+                    switch ((string)p) 
+                    { 
+                    case "start":
+                        SelectedItemMainListView.Service.Start();                    
+                        await Task.Run(() => ShowProgress(ServiceControllerStatus.Running));                    
                                        
-                    break;
-                case "stop":
-                    SelectedItemMainListView.Service.Stop();
-                    await Task.Run(() => ShowProgress(ServiceControllerStatus.Stopped));
+                        break;
+                    case "stop":
+                        SelectedItemMainListView.Service.Stop();
+                        await Task.Run(() => ShowProgress(ServiceControllerStatus.Stopped));
                     
-                    break;
-                case "pause":
-                    SelectedItemMainListView.Service.Pause();
-                    await Task.Run(() => ShowProgress(ServiceControllerStatus.Paused));
+                        break;
+                    case "pause":
+                        SelectedItemMainListView.Service.Pause();
+                        await Task.Run(() => ShowProgress(ServiceControllerStatus.Paused));
                     
-                    break;
-                case "continue":
-                    SelectedItemMainListView.Service.Continue();
-                    await Task.Run(() => ShowProgress(ServiceControllerStatus.ContinuePending));
+                        break;
+                    case "continue":
+                        SelectedItemMainListView.Service.Continue();
+                        await Task.Run(() => ShowProgress(ServiceControllerStatus.ContinuePending));
                     
-                    break;
-                case "newStart":
-                    SelectedItemMainListView.Service.Stop();
-                    await Task.Run(() => ShowProgress(ServiceControllerStatus.Stopped));
-                    if(SelectedItemMainListView.Service.Status== ServiceControllerStatus.Stopped)
-                    {
-                        SelectedItemMainListView.Service.Start();
-                        await Task.Run(() => ShowProgress(ServiceControllerStatus.Running));
+                        break;
+                    case "newStart":
+                        SelectedItemMainListView.Service.Stop();
+                        await Task.Run(() => ShowProgress(ServiceControllerStatus.Stopped));
+                        if(SelectedItemMainListView.Service.Status== ServiceControllerStatus.Stopped)
+                        {
+                            SelectedItemMainListView.Service.Start();
+                            await Task.Run(() => ShowProgress(ServiceControllerStatus.Running));
+                        }
+                    
+                        break;
+
+                    default: return;
+
                     }
-                    
-                    break;
-
-                default: return;
-
                 }
+                else                
+                    OpenMessageBox("The program requires admin rights to change the state of the service.");
             }
             catch(Exception e)
             {
-                OpenMessageBox(e.ToString());
+                 OpenMessageBox(e.ToString());
             }
+
             ServiceActionCommand.NotifyCanExecuteChanged();
             DoFiltering();  
 
@@ -235,21 +232,16 @@ namespace Service_Finder.ViewModel
         public void ShowProgress(ServiceControllerStatus desiredStatus)
         {
  
-            double currentValue = 0; // Aktueller Fortschritt in Prozent           
+            double currentValue = 0; // actual advance in percent          
             double virtualtime = 0;
             int statuscounter = 0;
 
-            while (currentValue < 0.798d)//Loop breaks after 6 seconds (0.798 is reached after 600 loops with 20ms sleep)
+            while (currentValue < 0.798d) //Loop breaks after 6 seconds (0.798 is reached after 600 loops with 20ms sleep)
             {
-
-
-                //double speedFactor =  1-Math.Exp(-virtualtime / 10); //Asymptote y=1
+               
                 currentValue = 0.8 - Math.Exp(-(virtualtime + 2.231) / 10);
-                virtualtime += 0.2d;//reach round about 0.75 at 2000ms ( 20ms sleep by 100 loopcounts).
 
-               // double incrementValue = increment * speedFactor;
-
-               // currentValue += incrementValue;
+                virtualtime += 0.2d;    //reach round about 0.75 at 2000ms ( 20ms sleep by 100 loopcounts).
 
                 ProgressValue = (int)currentValue*100;
 
@@ -268,8 +260,8 @@ namespace Service_Finder.ViewModel
 
             if (SelectedItemMainListView.Service.Status == desiredStatus)
             {
-                double incrementSteps = (100 - currentValue)/10; //10 steps in round about 200ms
-                for(int i=0;i<=10;i++)  //close gap to 100%
+                double incrementSteps = (100 - currentValue)/10;     //10 steps in round about 200ms
+                for(int i=0;i<=10;i++)    //close gap to 100%
                 {
                     currentValue += incrementSteps;
                     ProgressValue = (int)currentValue;
@@ -301,7 +293,12 @@ namespace Service_Finder.ViewModel
             }
         }
 
-
+        public bool IsCurrentProcessAdmin()
+        {
+            using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+            var principal = new System.Security.Principal.WindowsPrincipal(identity);
+            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+        }
 
     }
 }

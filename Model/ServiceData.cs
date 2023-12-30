@@ -59,19 +59,15 @@ namespace Service_Finder.Model
         {
 
             NumberServices= ServiceList.Count;
-            //ServiceDescriptions = new string[NumberServices];
-            //ServicePathes = new string[NumberServices];
 
-            //FullServiceCollection = new ObservableCollection<FullServiceProperties>();
 
             for (var i = 0; i < NumberServices; i++)
             {
                 using (var mngObject = new ManagementObject(new ManagementPath(string.Format("Win32_Service.Name='{0}'", ServiceList[i].ServiceName))))
                 {
-                    //ServiceDescriptions[i] = mngObject["Description"]?.ToString();
-                    //ServicePathes[i]= mngObject["PathName"]?.ToString();
 
                     FullServiceCollection.Add(new FullServiceProperties() { Service = ServiceList[i], Description = mngObject["Description"]?.ToString() ?? "null", ServicePath = mngObject["PathName"]?.ToString() ?? "null" });
+
                 }
 
             }
@@ -97,7 +93,6 @@ namespace Service_Finder.Model
 
             catch (Exception e)
             {
-                //MessageBox.Show(e.ToString());
                 OpenMessageBox(e.ToString());
             }
         }
@@ -116,7 +111,6 @@ namespace Service_Finder.Model
             }
             catch (Exception e)
             {
-                //MessageBox.Show(e.ToString());
                 OpenMessageBox(e.ToString());
             }
 
